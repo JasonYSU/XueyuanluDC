@@ -1,13 +1,15 @@
 import logging
 from logging.handlers import RotatingFileHandler
-
+import requests
 import redis
-from flask import Flask, request
+
+from flask import Flask, request, render_template
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 
 from config import APP_ENV, config
+
 
 db = SQLAlchemy()
 mail = Mail()
@@ -54,6 +56,19 @@ def creat_app():
     app = Flask(__name__)
     app.config.from_object(config[APP_ENV])
 
+    # app = Flask(
+    #     __name__,
+    #     static_folder="./dist/static",
+    #     template_folder="./dist"
+    # )
+    # @app.route('/', defaults={'path': ''})
+    # @app.route('/<path:path>')
+    # def catch_all(path):
+    #     if app.debug:
+    #         return requests.get('http://localhost:8080/{}'.format(path)).text
+    #     return render_template("index.html")
+    # app.config.from_object(config[APP_ENV])
+
     CORS(app, resources=r'/*')
 
     # app.after_request(after_request)
@@ -63,8 +78,14 @@ def creat_app():
     db.init_app(app)
     mail.init_app(app)
 
-    # 注册api_v1_0 蓝图
-    from app.api_v1 import api
-    app.register_blueprint(api, url_prefix='/api/v1.0')
+    # 注册user 蓝图
+    from app.user import api as user_api
+    app.register_blueprint(user_api, url_prefix='/api/user')
+    # 注册community 蓝图
+    from app.community import api as community_api
+    app.register_blueprint(community_api, url_prefix='/api/community')
+    # 注册school 蓝图
+    from app.school import api as school_api
+    app.register_blueprint(school_api, url_prefix='/api/school')
 
     return app

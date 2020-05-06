@@ -13,12 +13,13 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    permission = db.Column(db.Integer, default=0, server_default='0')
     email = db.Column(db.String(255), unique=True, index=True)
-    nickname = db.Column(db.String(255), unique=True,index=True)
+    mobile = db.Column(db.String(11), default='0')
     password_hash = db.Column(db.String(128))
-    join_time = db.Column(db.DateTime, default=datetime.utcnow)
-    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    nickname = db.Column(db.String(255), unique=True,index=True)
+    permission = db.Column(db.Integer, default=0, server_default='0')
+    join_time = db.Column(db.DateTime, default=datetime.utcnow())
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow())
 
     @property
     def password(self):
@@ -79,5 +80,27 @@ class User(db.Model):
 
     #TODO: 可以添加用户头像
 
+class Community(db.Model):
+    __tablename__ = 'community'
+    ID = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), default='')
+    familyNum = db.Column(db.Integer)
+    serverNum = db.Column(db.Integer)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
 
+class School(db.Model):
+    __tablename__ = 'school'
+    ID = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    type = db.Column(db.Integer, default='-1')
+    studentNum = db.Column(db.Integer, default=-1)
+    introduce = db.Column(db.Text)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Population(db.Model):
+    __tablename__ = 'population'
+    ID = db.Column(db.Integer, primary_key=True)
+    age = db.Column(db.Integer, default=-1)
+    education = db.Column(db.Integer, default=-1)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
 
